@@ -1,11 +1,12 @@
 from rest_framework import serializers
 from .models import Booking
 from parking.serializers import ParkingSlotSerializer
+from parking.models import ParkingSlot
 
 class BookingSerializer(serializers.ModelSerializer):
     slot = ParkingSlotSerializer(read_only=True)
     slot_id = serializers.PrimaryKeyRelatedField(
-        queryset=None, write_only=True, source='slot'
+        queryset=ParkingSlot.objects.all(), write_only=True, source='slot' #provided a queryset argument to ensure the related object exists before creating records
     )
 
     class Meta:
