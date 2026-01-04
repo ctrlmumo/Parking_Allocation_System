@@ -14,8 +14,8 @@ Base url: http://127.0.0.1:8000/api/
 **Body (JSON):**
 ```json
 {
-  "username": "john_doe",
-  "email": "john@example.com",
+  "username": "user_1",
+  "email": "user1@example.com",
   "password": "password123"
 }
 ```
@@ -28,7 +28,7 @@ Base url: http://127.0.0.1:8000/api/
 **Body (JSON):**
 ```json
 {
-  "username": "john_doe",
+  "username": "user_1",
   "password": "password123"
 }
 ```
@@ -39,7 +39,6 @@ Base url: http://127.0.0.1:8000/api/
   "token": "abc123xyz456"
 }
 ```
-Copy this token — it is required for all protected endpoints.
 
   
 
@@ -54,7 +53,7 @@ Authorization: Token abc123xyz456
 **Response:**
 ```json
 {
-  "user": "john_doe",
+  "user": "user_1",
   "phone_number": "",
   "is_admin": false
 }
@@ -74,9 +73,9 @@ Authorization: Token admin_token_here
 **Body (JSON):**
 ```json
 {
-  "name": "CBD Parking",
-  "location": "Nairobi CBD",
-  "total_slots": 20
+  "name": "Office Parking",
+  "location": "Westlands",
+  "total_slots": 30
 }
 ```
 
@@ -102,7 +101,7 @@ Authorization: Token admin_token_here
 **Body (JSON):**
 ```json
 {
-  "slot_number": "A1"
+  "slot_number": "A5"
 }
 ```
 
@@ -143,8 +142,8 @@ Authorization: Token abc123xyz456
 ```json
 {
   "slot_id": 1,
-  "start_time": "2026-01-03T10:00:00",
-  "end_time": "2026-01-03T12:00:00"
+  "start_time": "2025-12-04T10:10:00",
+  "end_time": "2025-12-04T12:12:00"
 }
 ```
 
@@ -176,13 +175,3 @@ Authorization: Token abc123xyz456
 **Headers:**
 ```
 Authorization: Token abc123xyz456
-
-
-##  Quick Screen Recording Flow
-1. Register user
-2. Login → copy token
-3. Access profile endpoint
-4. View parking lots
-5. View available slots
-6. Create booking
-7. Check-in & check-out

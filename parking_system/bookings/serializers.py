@@ -1,29 +1,41 @@
 from rest_framework import serializers
 from .models import Booking
-from parking.serializers import ParkingSlotSerializer
 from parking.models import ParkingSlot
 
+
 class BookingSerializer(serializers.ModelSerializer):
-    slot = ParkingSlotSerializer(read_only=True)
     slot_id = serializers.PrimaryKeyRelatedField(
-        queryset=ParkingSlot.objects.all(), write_only=True, source='slot' #provided a queryset argument to ensure the related object exists before creating records
+        queryset=ParkingSlot.objects.filter(status='available'),
+        source='slot',
+        write_only=True
     )
 
     class Meta:
         model = Booking
-        fields = ['id', 'user', 'slot', 'slot_id', 'start_time', 'end_time', 'status']
-        read_only_fields = ['user', 'start_time', 'end_time', 'status']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Dynamically set queryset for slot_id
-        from parking.models import ParkingSlot
-        self.fields['slot_id'].queryset = ParkingSlot.objects.filter(status='available')
+        fields = [
+            'id',
+            'slot_id',
+            'slot',
+            'start_time',
+            'end_time',
+            'status',
+        ]
+        read_only_fields = ['slot', 'status']
 
     def create(self, validated_data):
+        request = self.context['request']
         slot = validated_data['slot']
-        # Mark slot as reserved
+
+        # Reserve the slot
         slot.status = 'reserved'
         slot.save()
-        validated_data['user'] = self.context['request'].user
-        return super().create(validated_data)
+
+        booking = Booking.objects.create(
+            user=request.user,
+            slot=slot,
+            start_time=validated_data['start_time'],
+            end_time=validated_data['end_time'],
+            status='active'
+        )
+
+        return booking
